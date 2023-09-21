@@ -6,11 +6,11 @@ import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.swing.*;
-import java.time.Duration;
 
+/**
+ * Страница почтового ящика с папками и письмами
+ */
 public class BoxPageObject extends Base {
     public BoxPageObject(WebDriver driver) {
         super(driver);
@@ -67,6 +67,7 @@ public class BoxPageObject extends Base {
     /**
      * Закрыть окошко с сообщением об успешной отправке письма
      */
+    @Step
     public BoxPageObject closeSuccessMailFrame() {
         new Actions(driver)
                 .sendKeys(Keys.ESCAPE)
@@ -77,6 +78,7 @@ public class BoxPageObject extends Base {
     /**
      * Нажать на кнопку "Письма себе" для перехода к письмам, отправленным самому себе
      */
+    @Step
     public BoxPageObject goToMyselfMail() {
         click(myselfMailLink);
         return this;
@@ -89,6 +91,7 @@ public class BoxPageObject extends Base {
      *
      * @param expectedSubject ожидаемая тема письма
      */
+    @Step
     public BoxPageObject assertLastRecievedMailSubject(String expectedSubject) throws InterruptedException {
         waitUntilUrlToBe("https://e.mail.ru/tomyself/");
         Thread.sleep(2000);
@@ -102,6 +105,7 @@ public class BoxPageObject extends Base {
     /**
      * Подождать 2 секунды и открыть на просмотр последнее полученное сообщение
      */
+    @Step
     public BoxPageObject openLastRecievedMailToVeiw() throws InterruptedException {
         Thread.sleep(2000);
         click(lastRecievedMailRow);
@@ -114,6 +118,7 @@ public class BoxPageObject extends Base {
      *
      * @param expectedText ожидаемый текст подписи.
      */
+    @Step
     public BoxPageObject assertNewMailSign(final String expectedText) {
         Assert.assertEquals(newMailSignText.getText(), expectedText);
         return this;
@@ -126,6 +131,7 @@ public class BoxPageObject extends Base {
      * @param expectedText  Ожидаемый текст подписи. Находится внизу текста письма.
      * @param expectContact Ожидаемое имя отправителя. Отображается рядом с иконкой отправителя.
      */
+    @Step
     public BoxPageObject assertViewMailSign(final String expectContact,
                                             final String expectedText) {
         Assert.assertEquals(viewMailSignText.getText(), expectedText);
@@ -164,16 +170,13 @@ public class BoxPageObject extends Base {
                                       final String mailText) {
 
         // Заполнить поло "Кому" в новом письме
-        waitUntilElementVisible(mailContact);
-        mailContact.sendKeys(addressee);
+        setText(mailContact, addressee);
 
         // Заполнить поле "Тема" в новом письме
-        waitUntilElementVisible(mailSubject);
-        mailSubject.sendKeys(subject);
+        setText(mailSubject, subject);
 
         // Заполнить текст нового письма
-        waitUntilElementVisible(firstMailEditorLine);
-        firstMailEditorLine.sendKeys(mailText);
+        setText(firstMailEditorLine, mailText);
 
         return this;
     }
@@ -202,6 +205,7 @@ public class BoxPageObject extends Base {
      * @param subject Тема письма.
      * @return WebElement, представляющий письмо в списке папки
      */
+    @Step
     public WebElement findMailInBoxBySubject(String subject) {
         String xpath = ".//a[contains(@class, 'letter-list-item')]//div[@class='llc__content']" +
                 "//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject')]" +
@@ -243,6 +247,7 @@ public class BoxPageObject extends Base {
      *
      * @param subject Тема письма.
      */
+    @Step
     public BoxPageObject assertMailIsNotInBox(String subject) {
         try {
             findMailInBoxBySubject(subject);

@@ -75,11 +75,20 @@ public class Base {
         return false;
     }
 
+    /**
+     * Дождаться появления элемента и кликнуть на него
+     * @param element WebElement.
+     */
     public void click(WebElement element){
         waitUntilElementVisible(element);
         element.click();
     }
 
+    /**
+     * Дождаться появления элемента и ввести в него значение.
+     * @param element WebElement.
+     * @param txt Текст.
+     */
     public void setText(WebElement element, String txt){
         waitUntilElementVisible(element);
         element.sendKeys(txt);

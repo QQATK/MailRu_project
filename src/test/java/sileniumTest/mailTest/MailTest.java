@@ -6,12 +6,14 @@ import automation.pageObjects.mail.GeneralSettingsPageObject;
 import automation.pageObjects.mail.MailHomePageObject;
 
 import automation.pageObjects.mail.MailViewPageObject;
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import org.junit.Test;
 import sileniumTest.BaseDriverClass;
 
 import javax.swing.*;
 import java.util.Random;
+
 
 
 public class MailTest extends BaseDriverClass {
@@ -30,6 +32,7 @@ public class MailTest extends BaseDriverClass {
 
 
     @Test
+    @Description("Тест кейс для автоматизации mail.ru")
     public void mailTest() throws InterruptedException {
 
         MailHomePageObject homePage = new MailHomePageObject(getDriver());
@@ -104,5 +107,4 @@ public class MailTest extends BaseDriverClass {
                 .assertMailIsNotInBox(mailSubject1)
                 .assertMailIsNotInBox(mailSubject2);
     }
-
 }

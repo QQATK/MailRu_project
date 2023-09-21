@@ -6,6 +6,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+
+
+/**
+ * Страница общих настроек.
+ * testData.properties - generalSettingsUrl.
+ */
 public class GeneralSettingsPageObject extends Base {
     public GeneralSettingsPageObject(WebDriver driver) {
         super(driver);
@@ -43,6 +49,7 @@ public class GeneralSettingsPageObject extends Base {
         editSignNameInput.clear();
         editSignNameInput.sendKeys(signName);
 
+        // TODO: editSignTextInput.sendKeys(signText); потенциально может вызвать ошибку при пустой или многострочной подписи
         // Заполнить поле "Подпись" при редактировании подписи.
         waitUntilElementVisible(editSignTextInput);
         editSignTextInput.clear();

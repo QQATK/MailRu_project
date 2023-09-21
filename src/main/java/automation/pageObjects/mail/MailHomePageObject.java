@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 
+/**
+ * Стартовая страница (до входа)
+ */
 public class MailHomePageObject extends Base {
 
     @FindBy(xpath = ".//iframe[@class='ag-popup__frame__layout__iframe']")
@@ -55,15 +58,13 @@ public class MailHomePageObject extends Base {
         driver.switchTo().frame(loginIframe);
 
         // Заполнить поле ввода логина при входе.
-        waitUntilElementVisible(usernameInput);
-        usernameInput.sendKeys(login);
+        setText(usernameInput, login);
 
         // Нажать кнопку "Войти" после ввода логина, чтобы перейти к вводу пароля.
         click(enterPasswordNextButton);
 
         // Заполнить поле ввода пароля при входе.
-        waitUntilElementVisible(passwordInput);
-        passwordInput.sendKeys(password);
+        setText(passwordInput, password);
 
         // Нажать кнопку "Войти" для подтверждения логина и пароля и входа в почту.
         click(submitSignInButton);
