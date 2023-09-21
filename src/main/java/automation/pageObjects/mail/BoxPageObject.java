@@ -3,9 +3,7 @@ package automation.pageObjects.mail;
 import automation.steps.Base;
 import io.qameta.allure.Step;
 import org.junit.Assert;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -42,7 +40,8 @@ public class BoxPageObject extends Base {
     @FindBy(xpath = ".//a[contains(@class, 'letter-list-item')][1]")
     WebElement lastRecievedMailRow;
 
-    @FindBy(xpath = ".//a[contains(@class, 'letter-list-item')][1]//div[@class='llc__content']//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject llc__subject_unread')]//div//span")
+    @FindBy(xpath = ".//a[contains(@class, 'letter-list-item')][1]//div[@class='llc__content']" +
+            "//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject')]//div//span")
     WebElement lastRecievedMailSubject;
 
     @FindBy(xpath = ".//div[@data-widget='signature']//div[@data-signature-widget='content']//div")
@@ -53,6 +52,16 @@ public class BoxPageObject extends Base {
 
     @FindBy(xpath = ".//div[@class='letter__author']//span")
     WebElement viewMailSignContact;
+
+    @FindBy(xpath = ".//span[@title='Выделить все']")
+    WebElement selectAllMailButton;
+
+    @FindBy(xpath = ".//a[contains(@class, 'letter-list-item')][1]//input")
+    WebElement mailCheckbox;
+
+    @FindBy(xpath = ".//div[@class='portal-menu-element portal-menu-element_remove portal-menu-element_expanded " +
+            "portal-menu-element_not-touch']")
+    WebElement deleteMailButton;
 
 
     /**
@@ -73,19 +82,23 @@ public class BoxPageObject extends Base {
         return this;
     }
 
+    //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
+
     /**
      * Проверяем соответствие темы последнего отправленного самому себе письма и переданной строке
      *
      * @param expectedSubject ожидаемая тема письма
      */
-    public BoxPageObject assertLastRecievedMailSubject(String expectedSubject) {
+    public BoxPageObject assertLastRecievedMailSubject(String expectedSubject) throws InterruptedException {
         waitUntilUrlToBe("https://e.mail.ru/tomyself/");
+        Thread.sleep(2000);
         waitUntilElementVisible(lastRecievedMailSubject);
         Assert.assertEquals(lastRecievedMailSubject.getText(), expectedSubject);
         return this;
     }
 
     //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
+
     /**
      * Подождать 2 секунды и открыть на просмотр последнее полученное сообщение
      */
@@ -110,7 +123,7 @@ public class BoxPageObject extends Base {
     /**
      * Проверяем подпись.
      *
-     * @param expectedText Ожидаемый текст подписи. Находится внизу текста письма.
+     * @param expectedText  Ожидаемый текст подписи. Находится внизу текста письма.
      * @param expectContact Ожидаемое имя отправителя. Отображается рядом с иконкой отправителя.
      */
     public BoxPageObject assertViewMailSign(final String expectContact,
@@ -183,5 +196,60 @@ public class BoxPageObject extends Base {
         return this;
     }
 
+    /**
+     * Получить WebElement письма в списке писем папки по его полю "Тема".
+     *
+     * @param subject Тема письма.
+     * @return WebElement, представляющий письмо в списке папки
+     */
+    public WebElement findMailInBoxBySubject(String subject) {
+        String xpath = ".//a[contains(@class, 'letter-list-item')]//div[@class='llc__content']" +
+                "//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject')]" +
+                "//div//span[text()='" + subject + "']";
+        waitUntilElementVisible(xpath);
+        return getDriver().findElement(By.xpath(xpath));
+    }
+
+    /**
+     * Удалить письмо из папки по его полю "Тема".
+     *
+     * @param subject Тема письма.
+     */
+    @Step
+    public BoxPageObject removeMailFromBox(String subject) {
+
+        // Найти строку с письмом которое хотим удалить
+        WebElement mailToRemove = findMailInBoxBySubject(subject);
+
+        // навести на нее курсор
+        new Actions(driver).moveToElement(mailToRemove).perform();
+
+        // найти чекбокс письма
+        String xpath = "./..//..//..//..//..//.." +
+                "//div[@class='checkbox']";
+        WebElement mailCheckbox = mailToRemove.findElement(By.xpath(xpath));
+
+        // отметить письмо
+        click(mailCheckbox);
+
+        // нажать "Удалить"
+        click(deleteMailButton);
+
+        return this;
+    }
+
+    /**
+     * Проверяем, что письма больше нет в папке.
+     *
+     * @param subject Тема письма.
+     */
+    public BoxPageObject assertMailIsNotInBox(String subject) {
+        try {
+            findMailInBoxBySubject(subject);
+        } catch (NoSuchElementException e) {
+            System.out.println("Письмо удалено - ОК");
+        }
+        return this;
+    }
 
 }

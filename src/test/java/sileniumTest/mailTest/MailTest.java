@@ -16,7 +16,8 @@ import java.util.Random;
 
 public class MailTest extends BaseDriverClass {
 
-    static private final String mailSubject = "Mail subject test";
+    static private final String mailSubject1 = "Delete this mail 1";
+    static private final String mailSubject2 = "Delete this mail 2";
     static private final String mailText = "mailText";
 
     static private final String mailUrlHome = PropertyLoader.loadProperty("mailHomeUrl");
@@ -27,15 +28,16 @@ public class MailTest extends BaseDriverClass {
     static private final String password = PropertyLoader.loadProperty("password");
 
 
+
     @Test
     public void mailTest() throws InterruptedException {
-
-        openUrl(mailUrlHome);
 
         MailHomePageObject homePage = new MailHomePageObject(getDriver());
         BoxPageObject boxPage = new BoxPageObject(getDriver());
         GeneralSettingsPageObject generalSettingsPage = new GeneralSettingsPageObject(getDriver());
         MailViewPageObject mailViewPage = new MailViewPageObject(getDriver());
+
+        openUrl(mailUrlHome);
 
         homePage
                 // Входим в почту
@@ -44,20 +46,20 @@ public class MailTest extends BaseDriverClass {
         boxPage
                 // Создаем и отправляем новое письмо
                 .createNewMail()
-                .fillMailData(login, mailSubject, mailText)
+                .fillMailData(login, mailSubject1, mailText)
                 .sendMail()
                 .closeSuccessMailFrame()
 
                 // Переходим в папку "Письма самому себе" и проверяем наличие там только что отправленного письма
                 .goToMyselfMail()
-                .assertLastRecievedMailSubject(mailSubject)
+                .assertLastRecievedMailSubject(mailSubject1)
 
                 // Открываем его на просмотр
                 .openLastRecievedMailToVeiw();
 
         mailViewPage
                 // Проверяем, что текст и тема сообщения соответствует тому, что мы указывали при отправке
-                .assertMailSubject(mailSubject)
+                .assertMailSubject(mailSubject1)
                 .assertMailText(mailText);
 
         // Открыть страницу общих настроек почты и аккаунта
@@ -77,7 +79,7 @@ public class MailTest extends BaseDriverClass {
                 .createNewMail()
                 .assertNewMailSign(newSignText)
                 // Отправить новое письмо
-                .fillMailData(login, mailSubject, mailText)
+                .fillMailData(login, mailSubject2, mailText)
                 .sendMail()
                 .closeSuccessMailFrame()
 
@@ -88,13 +90,19 @@ public class MailTest extends BaseDriverClass {
         mailViewPage
                 // Проверить, что текст, тема и подпись письма соответствует отправленному
                 .assertMailText(mailText)
-                .assertMailSubject(mailSubject);
+                .assertMailSubject(mailSubject2);
 
         boxPage
-                .assertViewMailSign(newSignName, newSignText);
+                .assertViewMailSign(newSignName, newSignText)
+                .goToMyselfMail();
 
-        openUrl(inboxUrl);
-
+        boxPage
+                // Удаляем оба отправленных во время теста письмо
+                .removeMailFromBox(mailSubject1)
+                .removeMailFromBox(mailSubject2)
+                // И проверяем, что его больше нет в папке
+                .assertMailIsNotInBox(mailSubject1)
+                .assertMailIsNotInBox(mailSubject2);
     }
 
 }
