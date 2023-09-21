@@ -2,6 +2,7 @@ package automation.pageObjects.mail;
 
 import automation.steps.Base;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,9 +14,6 @@ public class MailViewPageObject extends Base {
 
     @FindBy(xpath = ".//h2[@class='thread-subject']")
     WebElement mailSubject;
-
-    @FindBy(xpath = ".//div[@class='letter-body__body-content']//div[.='Hello world!']")
-    WebElement mailText;
 
 
     /**
@@ -35,7 +33,12 @@ public class MailViewPageObject extends Base {
      * @param expectedText ожидаемый текст письма.
      */
     public MailViewPageObject assertMailText(String expectedText){
-        waitUntilElementVisible(mailText);
+
+        String xpath = ".//div[@class='letter-body__body-content']//div[.='" + expectedText + "']";
+        waitUntilElementVisible(xpath);
+
+        WebElement mailText = getDriver().findElement(By.xpath(xpath));
+
         Assert.assertEquals(
                 mailText.getText(),
                 expectedText);

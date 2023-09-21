@@ -1,6 +1,7 @@
 package automation.pageObjects.mail;
 
 import automation.steps.Base;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,7 +14,7 @@ public class GeneralSettingsPageObject extends Base {
     @FindBy(xpath = ".//p[.='По умолчанию']/../..//button[@data-test-id='edit']")
     WebElement editDefaultSignButton;
 
-    @FindBy(xpath = ".//button[@data-test-id='save']")
+    @FindBy(xpath = ".//div[contains(@class,'Signature')]//button[@data-test-id='save']")
     WebElement saveEditSignButton;
 
     @FindBy(xpath = ".//input[@data-test-id='name_input']")
@@ -22,40 +23,35 @@ public class GeneralSettingsPageObject extends Base {
     @FindBy(xpath = ".//div[@role='textbox']//div")
     WebElement editSignTextInput;
 
+
     /**
-     * Нажать на кнопку редактирования подписи по-умолчанию.
+     * Отредактировать подпись по умолчанию
+     *
+     * @param signName новый получатель в подписи
+     * @param signText новый текст подписи
      */
-    public GeneralSettingsPageObject clickToEditDefaultSignButton(){
+    @Step
+    public GeneralSettingsPageObject editDefaultSign(
+            final String signName,
+            final String signText) {
+
+        // Нажать на кнопку редактирования подписи по-умолчанию.
         click(editDefaultSignButton);
-        return this;
-    }
 
-    /**
-     * Заполнить поле "Имя отправителя" при редактировании подписи.
-     * @param name Имя отправителя
-     */
-    public GeneralSettingsPageObject setSignName(String name){
+        // Заполнить поле "Имя отправителя" при редактировании подписи.
         waitUntilElementVisible(editSignNameInput);
-        editSignNameInput.sendKeys(name);
-        return this;
-    }
+        editSignNameInput.clear();
+        editSignNameInput.sendKeys(signName);
 
-    /**
-     * Заполнить поле "Подпись" при редактировании подписи.
-     * @param text Имя отправителя
-     */
-    public GeneralSettingsPageObject setSignText(String text){
+        // Заполнить поле "Подпись" при редактировании подписи.
         waitUntilElementVisible(editSignTextInput);
-        editSignTextInput.sendKeys(text);
-        return this;
-    }
+        editSignTextInput.clear();
+        editSignTextInput.sendKeys(signText);
 
-    /**
-     * Нажать кнопку "Сохранить" для сохранения измененной подписи
-     */
-    public GeneralSettingsPageObject clickSaveEditSignButton(){
+        // Нажать кнопку "Сохранить" для сохранения измененной подписи
         waitUntilElementVisible(saveEditSignButton);
         click(saveEditSignButton);
+
         return this;
     }
 
