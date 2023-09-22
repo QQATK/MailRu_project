@@ -27,13 +27,17 @@ public class MailViewPageObject extends Base {
     WebElement viewMailSignContact;
 
 
+    ///// =======================================
+    /////       АТОМАРНЫЕ МЕТОДЫ
+    ///// =======================================
 
     /**
      * Проверяем, что тема письма соответствует ожидаемому.
+     *
      * @param expectedSubject ожидаемая тема письма.
      */
-    @Step
-    public MailViewPageObject assertMailSubject(String expectedSubject){
+    @Step("Проверяем, что тема письма соответствует ожидаемому. Ожидаем = {expectedSubject}")
+    public MailViewPageObject assertMailSubject(String expectedSubject) {
         waitUntilElementVisible(mailSubject);
         Assert.assertEquals(
                 mailSubject.getText(),
@@ -43,14 +47,15 @@ public class MailViewPageObject extends Base {
 
     /**
      * Проверяем, что текст письма соответствует ожидаемому.
+     *
      * @param expectedText ожидаемый текст письма.
      */
-    @Step
-    public MailViewPageObject assertMailText(String expectedText){
+    @Step("Проверяем, что текст письма соответствует ожидаемому. Ожидаем = {expectedText}")
+    public MailViewPageObject assertMailText(String expectedText) {
 
         String xpath = ".//div[@class='letter-body__body-content']//div[.='" + expectedText + "']";
-        waitUntilElementVisible(xpath);
 
+        waitUntilElementVisible(xpath);
         WebElement mailText = getDriver().findElement(By.xpath(xpath));
 
         Assert.assertEquals(
@@ -59,18 +64,25 @@ public class MailViewPageObject extends Base {
         return this;
     }
 
-
     /**
-     * Проверяем подпись.
+     * Проверяем отправителя подписи при просмотре письма
      *
-     * @param expectedText  Ожидаемый текст подписи. Находится внизу текста письма.
      * @param expectContact Ожидаемое имя отправителя. Отображается рядом с иконкой отправителя.
      */
-    @Step
-    public MailViewPageObject assertViewMailSign(final String expectContact,
-                                            final String expectedText) {
-        Assert.assertEquals(viewMailSignText.getText(), expectedText);
+    @Step("Проверяем отправителя подписи. Ожидаем = {expectContact}")
+    public MailViewPageObject assertViewMailSignContact(final String expectContact) {
         Assert.assertEquals(viewMailSignContact.getText(), expectContact);
+        return this;
+    }
+
+    /**
+     * Проверяем текст подписи при просмотре письма
+     *
+     * @param expectedText Ожидаемый текст подписи. Отображается рядом с иконкой отправителя.
+     */
+    @Step("Проверяем отправителя подписи. Ожидаем = {expectedText}")
+    public MailViewPageObject assertViewMailSignText(final String expectedText) {
+        Assert.assertEquals(viewMailSignContact.getText(), expectedText);
         return this;
     }
 

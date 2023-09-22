@@ -94,7 +94,8 @@ public class MailTest extends BaseDriverClass {
                 // Проверить, что текст, тема и подпись письма соответствует отправленному
                 .assertMailText(mailText)
                 .assertMailSubject(mailSubject2)
-                .assertViewMailSign(newSignName, newSignText);
+                .assertViewMailSignText(newSignText)
+                .assertViewMailSignContact(newSignName);
 
         boxPage
                 .goToMyselfMail();
