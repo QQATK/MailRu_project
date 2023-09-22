@@ -50,10 +50,12 @@ public class BoxPageObject extends Base {
     @FindBy(xpath = ".//span[@title='Выделить все']")
     WebElement selectAllMailButton;
 
-
     @FindBy(xpath = ".//div[@class='portal-menu-element portal-menu-element_remove portal-menu-element_expanded " +
             "portal-menu-element_not-touch']")
     WebElement deleteMailButton;
+
+    @FindBy(xpath = ".//span[text()='В папке нет писем']")
+    WebElement emptyBoxLabel;
 
 
 
@@ -281,6 +283,16 @@ public class BoxPageObject extends Base {
     public BoxPageObject assertMailIsNotInBox(String subject) {
         Assert.assertNull("Письмо с темой '" + subject + "' было найдено в папке.",
                 findMailInBoxBySubject(subject));
+        return this;
+    }
+
+    /**
+     * Проверяем, что на странице отображается сообщение об отсутствии писем в папке
+     */
+    @Step
+    public BoxPageObject assertMailboxIsEmpty() {
+        waitUntilElementVisible(emptyBoxLabel);
+        Assert.assertEquals(emptyBoxLabel.getText(), "В папке нет писем");
         return this;
     }
 

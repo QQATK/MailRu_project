@@ -106,6 +106,8 @@ public class MailTest extends BaseDriverClass {
                 .removeMailFromBox(mailSubject2)
                 // И проверяем, что их больше нет в папке
                 .assertMailIsNotInBox(mailSubject1)
-                .assertMailIsNotInBox(mailSubject2);
+                .assertMailIsNotInBox(mailSubject2)
+                // т.к мы удалили все письма, то проверяем, что на странице отображается надпись о пустом ящике
+                .assertMailboxIsEmpty();
     }
 }
