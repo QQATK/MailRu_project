@@ -7,11 +7,9 @@ import automation.pageObjects.mail.MailHomePageObject;
 
 import automation.pageObjects.mail.MailViewPageObject;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import org.junit.Test;
 import sileniumTest.BaseDriverClass;
 
-import javax.swing.*;
 import java.util.Random;
 
 
@@ -47,13 +45,15 @@ public class MailTest extends BaseDriverClass {
         boxPage
                 // Создаем и отправляем новое письмо
                 .createNewMail()
+                .assertIsNewMailOpened()
                 .fillMailData(login, mailSubject1, mailText)
                 .sendMail()
+                .assertSuccessMailSendFormIsOpen()
                 .closeSuccessMailFrame()
 
                 // Переходим в папку "Письма самому себе" и проверяем наличие там только что отправленного письма
                 .goToMyselfMail()
-                .assertLastRecievedMailSubject(mailSubject1)
+                .assertLastReceivedMailSubject(mailSubject1)
 
                 // Открываем его на просмотр
                 .openLastRecievedMailToVeiw();
@@ -82,11 +82,12 @@ public class MailTest extends BaseDriverClass {
                 // Отправить новое письмо
                 .fillMailData(login, mailSubject2, mailText)
                 .sendMail()
+                .assertSuccessMailSendFormIsOpen()
                 .closeSuccessMailFrame()
 
                 // Открыть его на просмотр
                 .goToMyselfMail()
-                .assertLastRecievedMailSubject(mailSubject2)
+                .assertLastReceivedMailSubject(mailSubject2)
                 .openLastRecievedMailToVeiw();
 
         mailViewPage
