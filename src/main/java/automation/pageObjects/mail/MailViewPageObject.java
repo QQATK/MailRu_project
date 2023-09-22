@@ -82,7 +82,7 @@ public class MailViewPageObject extends Base {
      */
     @Step("Проверяем отправителя подписи. Ожидаем = {expectedText}")
     public MailViewPageObject assertViewMailSignText(final String expectedText) {
-        Assert.assertEquals(viewMailSignContact.getText(), expectedText);
+        Assert.assertEquals(viewMailSignText.getText(), expectedText);
         return this;
     }
 
