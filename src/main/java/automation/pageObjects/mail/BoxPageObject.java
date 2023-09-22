@@ -182,15 +182,22 @@ public class BoxPageObject extends Base {
      * Получить WebElement письма в списке писем папки по его полю "Тема".
      *
      * @param subject Тема письма.
-     * @return WebElement, представляющий письмо в списке папки
+     * @return WebElement, представляющий письмо в списке папки. Вернет null если элемент не был найден.
      */
     @Step
     public WebElement findMailInBoxBySubject(String subject) {
+        // элемент, общий для письма в папке
         String xpath = ".//a[contains(@class, 'letter-list-item')]//div[@class='llc__content']" +
                 "//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject')]" +
                 "//div//span[text()='" + subject + "']/ancestor::a";
-        waitUntilElementVisible(xpath);
-        return getDriver().findElement(By.xpath(xpath));
+        try {
+            // найти элемент письма и вернуть его
+            waitUntilElementVisible(xpath);
+            return getDriver().findElement(By.xpath(xpath));
+        } catch (NoSuchElementException e) {
+            // если элемент не найден - вернуть null
+            return null;
+        }
     }
 
 
@@ -228,13 +235,8 @@ public class BoxPageObject extends Base {
      */
     @Step
     public BoxPageObject assertMailIsNotInBox(String subject) {
-        try {
-            findMailInBoxBySubject(subject);
-        } catch (NoSuchElementException e) {
-            System.out.println("Письмо удалено - ОК");
-            return this;
-        }
-        Assert.fail("Письмо с темой '" + subject + "' было найдено в папке.");
+        Assert.assertNull("Письмо с темой '" + subject + "' было найдено в папке.",
+                findMailInBoxBySubject(subject));
         return this;
     }
 
