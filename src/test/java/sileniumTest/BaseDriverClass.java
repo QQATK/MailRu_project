@@ -34,15 +34,20 @@ public class BaseDriverClass {
         return driver;
     }
 
+    /**
+     * Перейти на страницу.
+     * @param url адрес
+     */
     public void openUrl(String url){
         getDriver().get(url);
     }
+
 
     {
         watcher = new TestWatcher() {
             @Override
             protected void starting(Description description) {
-//                driver = createDriver();
+                System.out.println("Начат тест-кейс: " + description);
                 ChromeOptions chOpt = new ChromeOptions();
                 chOpt.addArguments("--remote-allow-origins=*");
 
@@ -59,6 +64,7 @@ public class BaseDriverClass {
 
             @Override
             protected void succeeded(Description description) {
+                System.out.println("Тест-кейс пройден");
             }
 
             @Override
@@ -67,10 +73,10 @@ public class BaseDriverClass {
 
             @Override
             protected void finished(Description description) {
-//                driver.quit();
-//                if (driver != null){
-//                    driver.quit();
-//                }
+                driver.quit();
+                if (driver != null){
+                    driver.quit();
+                }
             }
         };
     }

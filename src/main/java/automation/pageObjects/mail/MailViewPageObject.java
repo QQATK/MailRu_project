@@ -20,6 +20,13 @@ public class MailViewPageObject extends Base {
     @FindBy(xpath = ".//h2[@class='thread-subject']")
     WebElement mailSubject;
 
+    @FindBy(xpath = ".//div[@data-signature-widget='content']//div")
+    WebElement viewMailSignText;
+
+    @FindBy(xpath = ".//div[@class='letter__author']//span")
+    WebElement viewMailSignContact;
+
+
 
     /**
      * Проверяем, что тема письма соответствует ожидаемому.
@@ -49,6 +56,21 @@ public class MailViewPageObject extends Base {
         Assert.assertEquals(
                 mailText.getText(),
                 expectedText);
+        return this;
+    }
+
+
+    /**
+     * Проверяем подпись.
+     *
+     * @param expectedText  Ожидаемый текст подписи. Находится внизу текста письма.
+     * @param expectContact Ожидаемое имя отправителя. Отображается рядом с иконкой отправителя.
+     */
+    @Step
+    public MailViewPageObject assertViewMailSign(final String expectContact,
+                                            final String expectedText) {
+        Assert.assertEquals(viewMailSignText.getText(), expectedText);
+        Assert.assertEquals(viewMailSignContact.getText(), expectContact);
         return this;
     }
 

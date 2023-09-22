@@ -93,14 +93,14 @@ public class MailTest extends BaseDriverClass {
         mailViewPage
                 // Проверить, что текст, тема и подпись письма соответствует отправленному
                 .assertMailText(mailText)
-                .assertMailSubject(mailSubject2);
+                .assertMailSubject(mailSubject2)
+                .assertViewMailSign(newSignName, newSignText);
 
         boxPage
-                .assertViewMailSign(newSignName, newSignText)
                 .goToMyselfMail();
 
         boxPage
-                // Удаляем оба отправленных во время теста письмо
+                // Удаляем оба отправленных во время теста письма
                 .removeMailFromBox(mailSubject1)
                 .removeMailFromBox(mailSubject2)
                 // И проверяем, что его больше нет в папке

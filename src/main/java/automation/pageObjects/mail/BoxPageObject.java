@@ -47,12 +47,6 @@ public class BoxPageObject extends Base {
     @FindBy(xpath = ".//div[@data-widget='signature']//div[@data-signature-widget='content']//div")
     WebElement newMailSignText;
 
-    @FindBy(xpath = ".//div[@data-signature-widget='content']//div")
-    WebElement viewMailSignText;
-
-    @FindBy(xpath = ".//div[@class='letter__author']//span")
-    WebElement viewMailSignContact;
-
     @FindBy(xpath = ".//span[@title='Выделить все']")
     WebElement selectAllMailButton;
 
@@ -75,6 +69,7 @@ public class BoxPageObject extends Base {
         return this;
     }
 
+
     /**
      * Нажать на кнопку "Письма себе" для перехода к письмам, отправленным самому себе
      */
@@ -83,6 +78,7 @@ public class BoxPageObject extends Base {
         click(myselfMailLink);
         return this;
     }
+
 
     //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
 
@@ -99,6 +95,7 @@ public class BoxPageObject extends Base {
         Assert.assertEquals(lastRecievedMailSubject.getText(), expectedSubject);
         return this;
     }
+
 
     //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
 
@@ -126,21 +123,6 @@ public class BoxPageObject extends Base {
 
 
     /**
-     * Проверяем подпись.
-     *
-     * @param expectedText  Ожидаемый текст подписи. Находится внизу текста письма.
-     * @param expectContact Ожидаемое имя отправителя. Отображается рядом с иконкой отправителя.
-     */
-    @Step
-    public BoxPageObject assertViewMailSign(final String expectContact,
-                                            final String expectedText) {
-        Assert.assertEquals(viewMailSignText.getText(), expectedText);
-        Assert.assertEquals(viewMailSignContact.getText(), expectContact);
-        return this;
-    }
-
-
-    /**
      * Нажать на кнопку создания нового письма.
      */
     @Step
@@ -156,6 +138,7 @@ public class BoxPageObject extends Base {
 
         return this;
     }
+
 
     /**
      * Заполнить поля Кому, Тема, Текст письма. Шаг 5.1.
@@ -199,6 +182,7 @@ public class BoxPageObject extends Base {
         return this;
     }
 
+
     /**
      * Получить WebElement письма в списке писем папки по его полю "Тема".
      *
@@ -213,6 +197,7 @@ public class BoxPageObject extends Base {
         waitUntilElementVisible(xpath);
         return getDriver().findElement(By.xpath(xpath));
     }
+
 
     /**
      * Удалить письмо из папки по его полю "Тема".
@@ -253,7 +238,9 @@ public class BoxPageObject extends Base {
             findMailInBoxBySubject(subject);
         } catch (NoSuchElementException e) {
             System.out.println("Письмо удалено - ОК");
+            return this;
         }
+        Assert.fail("Письмо с темой '" + subject + "' было найдено в папке.");
         return this;
     }
 
