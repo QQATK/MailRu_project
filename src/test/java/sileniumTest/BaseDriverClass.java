@@ -43,6 +43,14 @@ public class BaseDriverClass {
     }
 
 
+    /**
+     * Обновить текущую страницу
+     */
+    public void refreshPage(){
+        getDriver().navigate().refresh();
+    }
+
+
     {
         watcher = new TestWatcher() {
             @Override
@@ -73,10 +81,10 @@ public class BaseDriverClass {
 
             @Override
             protected void finished(Description description) {
-                driver.quit();
-                if (driver != null){
-                    driver.quit();
-                }
+//                driver.quit();
+//                if (driver != null){
+//                    driver.quit();
+//                }
             }
         };
     }

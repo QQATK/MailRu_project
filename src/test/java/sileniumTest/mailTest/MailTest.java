@@ -15,7 +15,6 @@ import javax.swing.*;
 import java.util.Random;
 
 
-
 public class MailTest extends BaseDriverClass {
 
     static private final String mailSubject1 = "Delete this mail 1";
@@ -30,10 +29,9 @@ public class MailTest extends BaseDriverClass {
     static private final String password = PropertyLoader.loadProperty("password");
 
 
-
     @Test
     @Description("Тест кейс для автоматизации mail.ru")
-    public void mailTest() throws InterruptedException {
+    public void mailTest() {
 
         MailHomePageObject homePage = new MailHomePageObject(getDriver());
         BoxPageObject boxPage = new BoxPageObject(getDriver());
@@ -88,6 +86,7 @@ public class MailTest extends BaseDriverClass {
 
                 // Открыть его на просмотр
                 .goToMyselfMail()
+                .assertLastRecievedMailSubject(mailSubject2)
                 .openLastRecievedMailToVeiw();
 
         mailViewPage
