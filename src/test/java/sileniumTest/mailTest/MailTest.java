@@ -42,7 +42,7 @@ public class MailTest extends BaseDriverClass {
 
         homePage
                 // Входим в почту
-                .signIn(mailUrlHome, login, password);
+                .signIn(login, password);
 
         boxPage
                 // Создаем и отправляем новое письмо
