@@ -80,31 +80,26 @@ public class BoxPageObject extends Base {
     }
 
 
-    //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
-
     /**
      * Проверяем соответствие темы последнего отправленного самому себе письма и переданной строке
      *
      * @param expectedSubject ожидаемая тема письма
      */
     @Step
-    public BoxPageObject assertLastRecievedMailSubject(String expectedSubject) throws InterruptedException {
+    public BoxPageObject assertLastRecievedMailSubject(String expectedSubject) {
         waitUntilUrlToBe("https://e.mail.ru/tomyself/");
-        Thread.sleep(2000);
+        getDriver().navigate().refresh();
         waitUntilElementVisible(lastRecievedMailSubject);
         Assert.assertEquals(lastRecievedMailSubject.getText(), expectedSubject);
         return this;
     }
 
 
-    //TODO: заменить Thread.sleep на что то более подходящее. Ожидание нужно из-за того, что письмо может не сразу прогрузиться в ящике
-
     /**
-     * Подождать 2 секунды и открыть на просмотр последнее полученное сообщение
+     * Открыть на просмотр последнее полученное сообщение
      */
     @Step
-    public BoxPageObject openLastRecievedMailToVeiw() throws InterruptedException {
-        Thread.sleep(2000);
+    public BoxPageObject openLastRecievedMailToVeiw() {
         click(lastRecievedMailRow);
         return this;
     }
@@ -193,7 +188,7 @@ public class BoxPageObject extends Base {
     public WebElement findMailInBoxBySubject(String subject) {
         String xpath = ".//a[contains(@class, 'letter-list-item')]//div[@class='llc__content']" +
                 "//div[@class='llc__item llc__item_title']//span[contains(@class,'llc__subject')]" +
-                "//div//span[text()='" + subject + "']";
+                "//div//span[text()='" + subject + "']/ancestor::a";
         waitUntilElementVisible(xpath);
         return getDriver().findElement(By.xpath(xpath));
     }
@@ -211,12 +206,11 @@ public class BoxPageObject extends Base {
         WebElement mailToRemove = findMailInBoxBySubject(subject);
 
         // навести на нее курсор
-        new Actions(driver).moveToElement(mailToRemove).perform();
+        new Actions(getDriver()).moveToElement(mailToRemove).perform();
 
         // найти чекбокс письма
-        String xpath = "./..//..//..//..//..//.." +
-                "//div[@class='checkbox']";
-        WebElement mailCheckbox = mailToRemove.findElement(By.xpath(xpath));
+        WebElement mailCheckbox = mailToRemove.findElement(
+                By.xpath(".//button[@class='ll-av ll-av_centered ll-av_size_common']"));
 
         // отметить письмо
         click(mailCheckbox);
