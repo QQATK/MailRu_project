@@ -103,7 +103,7 @@ public class MailTest extends BaseDriverClass {
                 // Удаляем оба отправленных во время теста письма
                 .removeMailFromBox(mailSubject1)
                 .removeMailFromBox(mailSubject2)
-                // И проверяем, что его больше нет в папке
+                // И проверяем, что их больше нет в папке
                 .assertMailIsNotInBox(mailSubject1)
                 .assertMailIsNotInBox(mailSubject2);
     }
